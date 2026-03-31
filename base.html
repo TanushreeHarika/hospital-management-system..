@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}MediCore HMS{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body class="role-{{ session.get('role','guest') }}">
+
+{% if session.get('role') %}
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">✦</div>
+    <div>
+      <div class="brand-name">MediCore</div>
+      <div class="brand-sub">HMS</div>
+    </div>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">{{ session.get('username','?')[0].upper() }}</div>
+    <div>
+      <div class="user-name">{{ session.get('username') }}</div>
+      <div class="user-role">{{ session.get('role','').capitalize() }}</div>
+    </div>
+  </div>
+
+  <ul class="sidebar-nav">
+    {% if session.get('role') == 'admin' %}
+      <li><a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin_dashboard' }}">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a></li>
+      <li><a href="{{ url_for('add_doctor') }}" class="{{ 'active' if request.endpoint == 'add_doctor' }}">
+        <span class="nav-icon">＋</span> Add Doctor
+      </a></li>
+    {% elif session.get('role') == 'doctor' %}
+      <li><a href="{{ url_for('doctor_dashboard') }}" class="{{ 'active' if request.endpoint == 'doctor_dashboard' }}">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a></li>
+      <li><a href="{{ url_for('set_availability') }}" class="{{ 'active' if request.endpoint == 'set_availability' }}">
+        <span class="nav-icon">◷</span> Availability
+      </a></li>
+    {% elif session.get('role') == 'patient' %}
+      <li><a href="{{ url_for('patient_dashboard') }}" class="{{ 'active' if request.endpoint == 'patient_dashboard' }}">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a></li>
+      <li><a href="{{ url_for('patient_history') }}" class="{{ 'active' if request.endpoint == 'patient_history' }}">
+        <span class="nav-icon">◉</span> My History
+      </a></li>
+      <li><a href="{{ url_for('edit_profile') }}" class="{{ 'active' if request.endpoint == 'edit_profile' }}">
+        <span class="nav-icon">◎</span> Profile
+      </a></li>
+    {% endif %}
+  </ul>
+
+  <a href="{{ url_for('logout') }}" class="sidebar-logout">
+    <span class="nav-icon">⏻</span> Logout
+  </a>
+</nav>
+{% endif %}
+
+<main class="main-content {% if not session.get('role') %}no-sidebar{% endif %}">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for cat, msg in messages %}
+          <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

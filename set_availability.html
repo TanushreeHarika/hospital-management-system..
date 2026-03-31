@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Set Availability — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Set Availability</h1>
+    <p class="page-subtitle">Define your available slots for the next 7 days</p>
+  </div>
+  <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+</div>
+
+<div style="max-width: 680px;">
+  <div class="card" style="margin-bottom:20px; background:var(--blue-pale); border-color:var(--blue-light);">
+    <div class="card-body" style="padding:16px 20px; font-size:.87rem; color:var(--blue-mid);">
+      ℹ️ Set your morning and evening time windows for each day. Patients will see these slots and book accordingly.
+    </div>
+  </div>
+
+  <form method="POST">
+    {% for slot in slots %}
+    <div class="avail-card" style="margin-bottom:12px;">
+      <div class="avail-card-head">
+        📅 {{ slot.label }}
+        <input type="hidden" name="date_{{ loop.index0 }}" value="{{ slot.date }}" />
+      </div>
+      <div class="avail-card-body">
+        <div class="avail-slot-group">
+          <div class="avail-slot-label">🌅 Morning Slot</div>
+          <div class="avail-time-row">
+            <input class="form-control" type="time" name="morning_start_{{ loop.index0 }}"
+                   value="{{ slot.data.morning_start if slot.data else '08:00' }}" />
+            <span class="avail-time-sep">to</span>
+            <input class="form-control" type="time" name="morning_end_{{ loop.index0 }}"
+                   value="{{ slot.data.morning_end if slot.data else '12:00' }}" />
+          </div>
+        </div>
+        <div class="avail-slot-group">
+          <div class="avail-slot-label" style="color:var(--amber)">🌆 Evening Slot</div>
+          <div class="avail-time-row">
+            <input class="form-control" type="time" name="evening_start_{{ loop.index0 }}"
+                   value="{{ slot.data.evening_start if slot.data else '16:00' }}" />
+            <span class="avail-time-sep">to</span>
+            <input class="form-control" type="time" name="evening_end_{{ loop.index0 }}"
+                   value="{{ slot.data.evening_end if slot.data else '21:00' }}" />
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div style="display:flex; gap:10px; margin-top:16px;">
+      <button type="submit" class="btn btn-teal">Save Availability</button>
+      <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

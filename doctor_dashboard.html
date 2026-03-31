@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Doctor Dashboard — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="page-title">Welcome, Dr. {{ doc.fullname }}</h1>
+  <p class="page-subtitle">{{ doc.specialization }} · {{ doc.department }}</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card blue">
+    <div class="stat-label">Upcoming Appointments</div>
+    <div class="stat-val">{{ appointments | length }}</div>
+  </div>
+  <div class="stat-card teal">
+    <div class="stat-label">Assigned Patients</div>
+    <div class="stat-val">{{ assigned_patients | length }}</div>
+  </div>
+</div>
+
+<!-- Upcoming Appointments -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Upcoming Appointments</h2>
+    <a href="{{ url_for('set_availability') }}" class="btn btn-teal btn-sm">Set Availability</a>
+  </div>
+
+  {% if appointments %}
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Sr.</th>
+              <th>Patient Name</th>
+              <th>Date</th>
+              <th>Time Slot</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in appointments %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td><strong>{{ a.patient_name }}</strong></td>
+              <td>{{ a.slot_date }}</td>
+              <td><span class="badge badge-blue">{{ a.time_slot }}</span></td>
+              <td>
+                <div class="td-actions">
+                  <a href="{{ url_for('update_history', appointment_id=a.id) }}" class="btn btn-teal btn-sm">Update History</a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="card">
+      <div class="card-body" style="text-align:center; padding:48px; color:var(--neutral-500)">
+        No upcoming appointments. <a href="{{ url_for('set_availability') }}" style="color:var(--teal)">Set your availability</a> to receive bookings.
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Assigned Patients -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Assigned Patients</h2>
+  </div>
+
+  {% if assigned_patients %}
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Patient Name</th>
+              <th>Username</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in assigned_patients %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td><strong>{{ p.fullname }}</strong></td>
+              <td><span class="badge badge-gray">{{ p.username }}</span></td>
+              <td>
+                <a href="{{ url_for('view_patient', patient_id=p.id) }}" class="btn btn-outline btn-sm">View</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="card">
+      <div class="card-body" style="text-align:center; padding:32px; color:var(--neutral-500)">
+        No assigned patients yet.
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

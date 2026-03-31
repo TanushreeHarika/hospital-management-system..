@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Admin Dashboard</h1>
+    <p class="page-subtitle">Manage doctors, patients and appointments</p>
+  </div>
+  <form class="search-bar" method="GET">
+    <input class="form-control" type="text" name="q" value="{{ search }}" placeholder="Search doctors or patients…" />
+    <button type="submit" class="btn btn-outline">Search</button>
+    {% if search %}<a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Clear</a>{% endif %}
+  </form>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card blue">
+    <div class="stat-label">Registered Doctors</div>
+    <div class="stat-val">{{ doctors | length }}</div>
+  </div>
+  <div class="stat-card teal">
+    <div class="stat-label">Registered Patients</div>
+    <div class="stat-val">{{ patients | length }}</div>
+  </div>
+  <div class="stat-card green">
+    <div class="stat-label">Recent Appointments</div>
+    <div class="stat-val">{{ appointments | length }}</div>
+  </div>
+</div>
+
+<!-- Doctors -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Registered Doctors</h2>
+    <a href="{{ url_for('add_doctor') }}" class="btn btn-primary btn-sm">+ Add Doctor</a>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>Username</th>
+            <th>Specialization</th>
+            <th>Department</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in doctors %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td><strong>Dr. {{ d.fullname }}</strong></td>
+            <td><span class="badge badge-gray">{{ d.username }}</span></td>
+            <td>{{ d.specialization }}</td>
+            <td><span class="badge badge-teal">{{ d.department }}</span></td>
+            <td>
+              <div class="td-actions">
+                <form method="POST" action="{{ url_for('delete_doctor', uid=d.id) }}"
+                      onsubmit="return confirm('Remove Dr. {{ d.fullname }}?')">
+                  <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" style="text-align:center;color:var(--neutral-500);padding:32px">No doctors found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Patients -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Registered Patients</h2>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>Username</th>
+            <th>History</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in patients %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td><strong>{{ p.fullname }}</strong></td>
+            <td><span class="badge badge-gray">{{ p.username }}</span></td>
+            <td>
+              <a href="{{ url_for('admin_view_history', patient_id=p.id) }}"
+                 class="btn btn-outline btn-sm">View History</a>
+            </td>
+            <td>
+              <div class="td-actions">
+                <form method="POST" action="{{ url_for('delete_patient', uid=p.id) }}"
+                      onsubmit="return confirm('Remove patient {{ p.fullname }}?')">
+                  <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" style="text-align:center;color:var(--neutral-500);padding:32px">No patients found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Appointments -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Recent Appointments</h2>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Department</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td><span class="badge badge-blue">#{{ a.id }}</span></td>
+            <td>{{ a.patient_name }}</td>
+            <td>Dr. {{ a.doctor_name }}</td>
+            <td>{{ a.department }}</td>
+            <td>{{ a.slot_date }}</td>
+            <td>
+              {% if a.status == 'upcoming' %}<span class="badge badge-amber">Upcoming</span>
+              {% elif a.status == 'completed' %}<span class="badge badge-green">Completed</span>
+              {% else %}<span class="badge badge-red">Cancelled</span>{% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" style="text-align:center;color:var(--neutral-500);padding:32px">No appointments yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

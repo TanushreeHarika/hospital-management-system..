@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Add Doctor — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Add New Doctor</h1>
+    <p class="page-subtitle">Create a doctor account with credentials</p>
+  </div>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Back</a>
+</div>
+
+<div class="form-card">
+  <form method="POST">
+    <div class="form-section-label">Account Credentials</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-control" type="text" name="username" required placeholder="e.g. dr_smith" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-control" type="password" name="password" required placeholder="Initial password" />
+      </div>
+    </div>
+
+    <div class="form-section-label">Doctor Details</div>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-control" type="text" name="fullname" required placeholder="Dr. John Smith" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Specialization</label>
+        <input class="form-control" type="text" name="specialization" required placeholder="e.g. Cardiologist" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select class="form-control" name="department" required>
+          <option value="">Select department</option>
+          {% for d in departments %}
+          <option value="{{ d.name }}">{{ d.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Years of Experience</label>
+      <input class="form-control" type="number" name="experience" min="0" max="60" placeholder="e.g. 10" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bio / About</label>
+      <textarea class="form-control" name="bio" placeholder="Brief professional biography…"></textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button type="submit" class="btn btn-primary">Create Doctor Account</button>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

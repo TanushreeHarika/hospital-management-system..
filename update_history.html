@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Update History — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Update Patient History</h1>
+    <p class="page-subtitle">Record visit details and mark appointment as complete</p>
+  </div>
+  <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+</div>
+
+<div class="update-header">
+  <p><strong>Patient:</strong> {{ appt.patient_name }}</p>
+  <p><strong>Date:</strong> {{ appt.slot_date }} &nbsp;·&nbsp; <strong>Time:</strong> {{ appt.time_slot }}</p>
+  <p><strong>Department:</strong> {{ doc.department }}</p>
+</div>
+
+<div class="form-card">
+  <form method="POST">
+    <div class="form-section-label">Visit Information</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Visit Type</label>
+        <select class="form-control" name="visit_type">
+          <option value="In-person" {{ 'selected' if existing and existing.visit_type=='In-person' }}>In-person</option>
+          <option value="Online" {{ 'selected' if existing and existing.visit_type=='Online' }}>Online</option>
+          <option value="Follow-up" {{ 'selected' if existing and existing.visit_type=='Follow-up' }}>Follow-up</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tests Done</label>
+        <input class="form-control" type="text" name="tests_done"
+               value="{{ existing.tests_done if existing else '' }}"
+               placeholder="e.g. ECG, Blood work" />
+      </div>
+    </div>
+
+    <div class="form-section-label">Clinical Notes</div>
+    <div class="form-group">
+      <label class="form-label">Diagnosis</label>
+      <textarea class="form-control" name="diagnosis" placeholder="Describe the diagnosis…">{{ existing.diagnosis if existing else '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prescription</label>
+      <textarea class="form-control" name="prescription" placeholder="Prescription details…">{{ existing.prescription if existing else '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Medicines</label>
+      <textarea class="form-control" name="medicines" placeholder="e.g. Medicine A 1-0-1, Medicine B 0-1-0">{{ existing.medicines if existing else '' }}</textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button type="submit" class="btn btn-teal">Save & Complete Appointment</button>
+      <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

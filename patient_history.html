@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Patient History — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">
+      {% if viewer == 'admin' %}History: {{ patient.fullname }}
+      {% else %}My Health History{% endif %}
+    </h1>
+    <p class="page-subtitle">Full visit records and clinical notes</p>
+  </div>
+  {% if viewer == 'admin' %}
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+  {% else %}
+    <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+  {% endif %}
+</div>
+
+{% if viewer == 'admin' or viewer == 'patient' %}
+<div class="card" style="margin-bottom:24px;background:var(--teal-pale);border-color:var(--teal-light)">
+  <div class="card-body" style="padding:14px 20px">
+    <strong>Patient:</strong> {{ patient.fullname }}
+  </div>
+</div>
+{% endif %}
+
+{% if history %}
+<div class="history-timeline">
+  {% for h in history %}
+  <div class="history-item">
+    <div class="history-meta">
+      <span>Visit #{{ loop.index }}</span>
+      <span>·</span>
+      <strong>{{ h.visit_type }}</strong>
+      <span>·</span>
+      <span>Dr. {{ h.doctor_name }}</span>
+      <span>·</span>
+      <span style="color:var(--teal)">{{ h.department }}</span>
+      <span>·</span>
+      <span>{{ h.created_at[:10] if h.created_at else '' }}</span>
+    </div>
+    <div class="history-fields">
+      <div>
+        <div class="hf-label">Tests Done</div>
+        <div class="hf-val">{{ h.tests_done or '—' }}</div>
+      </div>
+      <div>
+        <div class="hf-label">Diagnosis</div>
+        <div class="hf-val">{{ h.diagnosis or '—' }}</div>
+      </div>
+      <div>
+        <div class="hf-label">Prescription</div>
+        <div class="hf-val">{{ h.prescription or '—' }}</div>
+      </div>
+      <div>
+        <div class="hf-label">Medicines</div>
+        <div class="hf-val">{{ h.medicines or '—' }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <div class="card-body" style="text-align:center;padding:64px;color:var(--neutral-500)">
+    No visit history recorded yet.
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

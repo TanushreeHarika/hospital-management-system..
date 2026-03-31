@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+hospital.db
+*.log
+.DS_Store
+

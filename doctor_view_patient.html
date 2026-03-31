@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Patient — {{ patient.fullname }} — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">{{ patient.fullname }}</h1>
+    <p class="page-subtitle">Patient History & Appointment Records</p>
+  </div>
+  <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+</div>
+
+<!-- Appointments with this patient -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Appointments</h2>
+  </div>
+  {% if appointments %}
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Time Slot</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td>{{ a.slot_date }}</td>
+            <td>{{ a.time_slot }}</td>
+            <td>
+              {% if a.status == 'upcoming' %}<span class="badge badge-amber">Upcoming</span>
+              {% elif a.status == 'completed' %}<span class="badge badge-green">Completed</span>
+              {% else %}<span class="badge badge-red">Cancelled</span>{% endif %}
+            </td>
+            <td>
+              {% if a.status == 'upcoming' %}
+              <a href="{{ url_for('update_history', appointment_id=a.id) }}" class="btn btn-teal btn-sm">Update History</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="card"><div class="card-body" style="color:var(--neutral-500);text-align:center;padding:32px">No appointments on record.</div></div>
+  {% endif %}
+</div>
+
+<!-- Visit History -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Visit History</h2>
+  </div>
+  {% if history %}
+  <div class="history-timeline">
+    {% for h in history %}
+    <div class="history-item">
+      <div class="history-meta">
+        <span>Visit #{{ loop.index }}</span>
+        <span>·</span>
+        <strong>{{ h.visit_type }}</strong>
+        <span>·</span>
+        <span>{{ h.doctor_name }}</span>
+        <span>·</span>
+        <span style="color:var(--teal)">{{ h.department }}</span>
+        <span>·</span>
+        <span>{{ h.created_at[:10] if h.created_at else '' }}</span>
+      </div>
+      <div class="history-fields">
+        <div>
+          <div class="hf-label">Tests Done</div>
+          <div class="hf-val">{{ h.tests_done or '—' }}</div>
+        </div>
+        <div>
+          <div class="hf-label">Diagnosis</div>
+          <div class="hf-val">{{ h.diagnosis or '—' }}</div>
+        </div>
+        <div>
+          <div class="hf-label">Prescription</div>
+          <div class="hf-val">{{ h.prescription or '—' }}</div>
+        </div>
+        <div>
+          <div class="hf-label">Medicines</div>
+          <div class="hf-val">{{ h.medicines or '—' }}</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card"><div class="card-body" style="color:var(--neutral-500);text-align:center;padding:32px">No history recorded yet.</div></div>
+  {% endif %}
+</div>
+
+{% endblock %}

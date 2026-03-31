@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ dept.name }} — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div>
+    <h1 class="page-title">{{ dept.name }}</h1>
+    <p class="page-subtitle">{{ dept.overview }}</p>
+  </div>
+  <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+</div>
+
+<div class="section-header">
+  <h2 class="section-title">Doctors in {{ dept.name }}</h2>
+</div>
+
+{% if doctors %}
+<div class="doctor-grid">
+  {% for d in doctors %}
+  <div class="doctor-card">
+    <div class="dc-avatar">{{ d.fullname[0].upper() }}</div>
+    <div class="dc-name">Dr. {{ d.fullname }}</div>
+    <div class="dc-spec">{{ d.specialization }}</div>
+    <div class="dc-dept">{{ d.department }}</div>
+    <div class="dc-exp">{{ d.experience }} years experience</div>
+    {% if d.bio %}
+    <p class="dc-bio">{{ d.bio[:120] }}{% if d.bio|length > 120 %}…{% endif %}</p>
+    {% endif %}
+    <div class="dc-actions">
+      <a href="{{ url_for('view_doctor', doctor_id=d.id) }}" class="btn btn-teal btn-sm">Check Availability</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <div class="card-body" style="text-align:center;padding:48px;color:var(--neutral-500)">
+    No doctors assigned to this department yet.
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

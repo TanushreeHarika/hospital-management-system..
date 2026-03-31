@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Login — MediCore HMS{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-left">
+    <div class="auth-logo">MediCore</div>
+    <p class="auth-tagline">Welcome back. Please sign in to your account.</p>
+    <div class="auth-deco">
+      <div class="auth-deco-item"></div>
+      <div class="auth-deco-item"></div>
+      <div class="auth-deco-item"></div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Sign in to access your dashboard</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-control" type="text" name="username" required placeholder="Enter username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-control" type="password" name="password" required placeholder="Enter password" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      </form>
+
+      <a href="{{ url_for('register') }}" class="auth-link">Don't have an account? Register →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

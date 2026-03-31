@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Dr. {{ doc.fullname }} — MediCore{% endblock %}
+{% block content %}
+
+<div style="margin-bottom:16px">
+  <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline btn-sm">← Back</a>
+</div>
+
+<!-- Profile Hero -->
+<div class="profile-hero">
+  <div class="profile-avatar">{{ doc.fullname[0].upper() }}</div>
+  <div>
+    <div class="profile-name">Dr. {{ doc.fullname }}</div>
+    <div class="profile-spec">{{ doc.specialization }}</div>
+    <div class="profile-tags">
+      <span class="profile-tag">{{ doc.department }}</span>
+      <span class="profile-tag">{{ doc.experience }} yrs experience</span>
+    </div>
+  </div>
+</div>
+
+{% if doc.bio %}
+<div class="card" style="margin-bottom:24px">
+  <div class="card-header"><span class="card-title">About</span></div>
+  <div class="card-body" style="color:var(--neutral-700);line-height:1.7">{{ doc.bio }}</div>
+</div>
+{% endif %}
+
+<!-- Availability -->
+<div class="section-header">
+  <h2 class="section-title">Available Slots</h2>
+</div>
+
+{% if availability %}
+<div class="card">
+  <div class="table-wrap">
+    <table class="avail-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Morning Slot</th>
+          <th>Evening Slot</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for slot in availability %}
+        <tr>
+          <td><strong>{{ slot.slot_date }}</strong></td>
+          <td>
+            <form method="POST" action="{{ url_for('book_appointment',
+                  doctor_id=doc.id, slot_date=slot.slot_date,
+                  time_slot=slot.morning_start ~ ' - ' ~ slot.morning_end) }}">
+              <button type="submit" class="slot-pill slot-morning">
+                {{ slot.morning_start }} – {{ slot.morning_end }}
+              </button>
+            </form>
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('book_appointment',
+                  doctor_id=doc.id, slot_date=slot.slot_date,
+                  time_slot=slot.evening_start ~ ' - ' ~ slot.evening_end) }}">
+              <button type="submit" class="slot-pill slot-evening">
+                {{ slot.evening_start }} – {{ slot.evening_end }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card">
+  <div class="card-body" style="text-align:center;padding:48px;color:var(--neutral-500)">
+    Dr. {{ doc.fullname }} hasn't set any availability yet. Please check back later.
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

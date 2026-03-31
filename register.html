@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Register — MediCore HMS{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-left">
+    <div class="auth-logo">MediCore</div>
+    <p class="auth-tagline">Join our platform and take control of your healthcare journey.</p>
+    <div class="auth-deco">
+      <div class="auth-deco-item"></div>
+      <div class="auth-deco-item"></div>
+      <div class="auth-deco-item"></div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h1 class="auth-title">Create account</h1>
+      <p class="auth-subtitle">Register as a patient to book appointments</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-control" type="text" name="fullname" required placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-control" type="text" name="username" required placeholder="Choose a username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-control" type="password" name="password" required placeholder="Choose a password" />
+        </div>
+        <button type="submit" class="btn btn-teal btn-full" style="margin-top:8px">Create Account</button>
+      </form>
+
+      <a href="{{ url_for('login') }}" class="auth-link">Already have an account? Sign in →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

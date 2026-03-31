@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile — MediCore{% endblock %}
+{% block content %}
+
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Edit Profile</h1>
+    <p class="page-subtitle">Update your account information</p>
+  </div>
+  <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+</div>
+
+<div class="form-card">
+  <form method="POST">
+    <div class="form-section-label">Personal Information</div>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-control" type="text" name="fullname" value="{{ pat.fullname }}" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-control" type="text" value="{{ session.username }}" disabled
+             style="background:var(--neutral-100);cursor:not-allowed" />
+      <small style="color:var(--neutral-500);font-size:.78rem">Username cannot be changed.</small>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
