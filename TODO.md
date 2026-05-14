@@ -1,3 +1,4 @@
+# hospital management system
 # CSS Fix Progress
 
 - [x] Create static/css/style.css (completed, but CSS corrupted - needs clean copy)
